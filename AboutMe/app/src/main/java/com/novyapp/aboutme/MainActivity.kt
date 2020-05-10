@@ -9,32 +9,35 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import com.novyapp.aboutme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var createNameButton: Button
-    lateinit var editNickname : EditText
-    lateinit var nicknameView: TextView
-
-
+    private lateinit var binding: ActivityMainBinding
+    private val myName: MyName = MyName("Robin Tourné")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        createNameButton = findViewById(R.id.button)
-        editNickname = findViewById(R.id.nickname_edit)
-        nicknameView = findViewById(R.id.nickname_text)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        createNameButton.setOnClickListener{
+        binding.myName = myName
+
+        binding.button.setOnClickListener{
             addNickname(it)
         }
+
     }
 
     private fun addNickname(view: View){
-        nicknameView.text = editNickname.text
+        binding.apply {
+            myName.nickname = nicknameEdit.text.toString()
+            invalidateAll()
+            nicknameEdit.visibility = View.GONE
+            view.visibility = View.GONE
+            nicknameText.visibility = View.VISIBLE
+        }
 
-        editNickname.visibility = View.GONE
-        view.visibility = View.GONE
-        nicknameView.visibility = View.VISIBLE
+
 
         //Hide Keyboard
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
